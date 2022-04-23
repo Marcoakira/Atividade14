@@ -9,4 +9,4 @@ def venda():
     id_funcionario = input("Digite o id do funcionario: ")
     id_cliente = input("Digite o id do cliente: ")
     print("\n inserindo dados ...")
-    return conector.inserir(f'''insert into clietes (id_produto, qtde_venda, id_func, id_cliente) values ( {id_produto },{quantidade }, {id_funcionario},{id_cliente} );''')
+    return conector.inserir(f'''insert into vendas (id_produto, qtde_venda, id_func, id_cliente) values ( {id_produto },{quantidade }, {id_funcionario},{id_cliente} );''')

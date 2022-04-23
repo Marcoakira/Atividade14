@@ -20,15 +20,18 @@ def cad_produtos():
     """
     prod_files = pd.read_csv("produtos.csv")
     for index, row in prod_files.iterrows():
-        conector.inserir(f'''insert into teste ( nome_produto, qtde_estoque) values ( '{row['nome_produto']}', {row['qtde_estoque']});''')
+        conector.inserir(f'''insert into produtos ( nome_produto, qtde_estoque) values ( '{row['nome_produto']}', {row['qtde_estoque']});''')
+
 
 def cad_clientes():
     """
     Função que cadastra os clientes
     """
-    func_files = pd.read_csv("funcionarios.csv")
-    for index, row in func_files.iterrows():
-        conector.inserir(f'''insert into Clientes ( nome_cliente, telefone_cliente) values ( '{row['nome_cliente']}', {row['telefone_cliente']});''')
+
+    cli_files = pd.read_csv("clientes.csv")
+    for index, row in cli_files.iterrows():
+        conector.inserir(f'''insert into Clientes ( nome_cliente, telefone_cliente) values ( '{row['nome_cliente']}', '{row['telefone_cliente']}');''')
+
 
 def cad_vendas():
     """
@@ -42,7 +45,7 @@ def cad_vendas():
     quantidade = int(input("quantos testes deseja realizar?"))
     while loop < quantidade:
         for index, row in new_table.iterrows():
-            conector.inserir(f'''insert into Vendas ( id_funcionario, id_produto, id_cliente, data_venda, valor_venda) values ( {row['id_funcionario']}, {row['id_produto']}, {row['id_cliente']}, '{row['data_venda']}', {row['valor_venda']});''')
+            conector.inserir(f'''insert into vendas (id_produto, qtde_venda, id_func, id_cliente) values ( {row['id_produto']},{row['qtde_venda'] }, {row['id_func']},{row['id_cliente']} );''')
             loop += 1
             menor_valor += 10
             maior_valor += 10
@@ -55,10 +58,12 @@ def cad_vendas():
     for index, row in vendas_files.iterrows():
         conector.inserir(f'''insert into Vendas ( id_funcionario, id_produto, id_cliente, data_venda, valor_venda) values ( {row['id_funcionario']}, {row['id_produto']}, {row['id_cliente']}, '{row['data_venda']}', {row['valor_venda']});''')
 
+
+
 def geral():
-    escolha = input(" sera iniciada a rotina de testes de vendas, deseja antes inserir a base de Funcionarios,Clientes e Produtos? (s/n)")
-    if escolha == "s":
-        cad_funcionarios()
-        cad_produtos()
-        cad_clientes()
+    # escolha = input(" sera iniciada a rotina de testes de vendas, deseja antes inserir a base de Funcionarios,Clientes e Produtos? (s/n)")
+    # if escolha == "s":
+    #     cad_funcionarios()
+    #     cad_produtos()
+    #     cad_clientes()
     cad_vendas()

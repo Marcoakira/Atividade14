@@ -5,7 +5,7 @@ def produto():
     nome = input("Digite o nome do produto: ")
     quantidade = input("Digite a quantidade do produto no estoque: ")
     print("\n inserindo dados ...")
-    return conector.inserir(f'''insert into teste ( nome_produto, qtde_estoque) values ( '{nome}', {quantidade});''')
+    return conector.inserir(f'''insert into produtos ( nome_produto, qtde_estoque) values ( '{nome}', {quantidade});''')
 
 
 
