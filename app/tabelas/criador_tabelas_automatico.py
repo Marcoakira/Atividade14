@@ -1,5 +1,6 @@
 from app.connector_and_menu.postgress import Conector_postgres
 
+
 class Criador_tabelas_automatico(Conector_postgres):
     def __init__(self):
         self.self = self
@@ -13,7 +14,6 @@ class Criador_tabelas_automatico(Conector_postgres):
                                     qtde_estoque INT,
                                     CONSTRAINT produtos_pk PRIMARY KEY (id_produto)
                                 ); ''')
-
 
     def tabela_clientes(self):
         self.conector.inserir(f''' create table if not exists Clientes (
@@ -44,6 +44,7 @@ class Criador_tabelas_automatico(Conector_postgres):
                                     CONSTRAINT vendas_fk3 FOREIGN KEY (id_cliente) REFERENCES Clientes (id_cliente)
                                 ); ''')
 
+    # cria a tabela log de vendas automaticamente e insere os dados atraves do metodo trigger de inserção e gatilho de atualização
     def tabela_log(self):
         self.conector.inserir(f''' CREATE TABLE IF NOT EXISTS vendas_log(
                                     id_log serial,
@@ -51,17 +52,17 @@ class Criador_tabelas_automatico(Conector_postgres):
                                     data_venda timestamp
                                 );
                                                                 
-                                CREATE OR REPLACE FUNCTION VENDAS_GATILHO()
-                                RETURNS TRIGGER AS $VENDAS_GATILHO$
-                                    BEGIN
-                                        IF(id_venda = 'INSERT') THEN
-                                            INSERT INTO vendas_log (id_func, data_venda) VALUES
-                                                ('Venda realizada pelo id ' || new.id_func, 'Venda realizada em ' || current_timestamp);
-                                            RETURN NEW;
-                                        END IF;
-                                    END;
-                                $VENDAS_GATILHO$
-                                LANGUAGE plpgsql;
+                               CREATE OR REPLACE FUNCTION VENDAS_GATILHO()
+                                    RETURNS TRIGGER AS $VENDAS_GATILHO$
+                                        BEGIN
+                                            IF(TG_OP = 'INSERT') THEN
+                                                INSERT INTO vendas_log (id_func, data_venda) VALUES
+                                                    ('Venda realizada pelo id ' || new.id_func, 'Venda realizada em ' || current_timestamp);
+                                                RETURN NEW;
+                                            END IF;
+                                        END;
+                                    $VENDAS_GATILHO$
+                                    LANGUAGE plpgsql;
                                 
                                 CREATE TRIGGER VENDAS_GATILHO BEFORE INSERT ON VENDAS
                                 FOR EACH ROW EXECUTE PROCEDURE VENDAS_GATILHO(); ''')
@@ -74,13 +75,3 @@ def criador_all():
     criador.tabela_funcionarios()
     criador.tabela_vendas()
     criador.tabela_log()
-
-
-
-
-
-
-
-
-
-
