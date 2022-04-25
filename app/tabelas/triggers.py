@@ -6,20 +6,17 @@ conector = Conector_postgres()
 # criar triggers para a tabela vendas e log,
 # e outro para que seja possivel atualizar a tabela produtos com a quantidade de estoque
 def trigger_log():
-    return conector.inserir('''  CREATE OR REPLACE FUNCTION VENDAS_GATILHO()
-                                RETURNS TRIGGER AS $VENDAS_GATILHO$
-                                    BEGIN
-                                        IF(id_venda = 'INSERT') THEN
-                                            INSERT INTO vendas_log (id_func, data_venda) VALUES
-                                                ('Venda realizada pelo id ' || new.id_func, 'Venda realizada em ' || current_timestamp);
-                                            RETURN NEW;
-                                        END IF;
-                                    END;
-                                $VENDAS_GATILHO$
-                                LANGUAGE plpgsql;
-                                
-                                CREATE TRIGGER VENDAS_GATILHO BEFORE INSERT ON VENDAS
-                                FOR EACH ROW EXECUTE PROCEDURE VENDAS_GATILHO(); ''')
+    return conector.inserir(''' 	CREATE OR REPLACE FUNCTION VENDAS_GATILHO()
+                                        RETURNS TRIGGER AS $VENDAS_GATILHO$
+                                            BEGIN
+                                                IF(TG_OP = 'INSERT') THEN
+                                                    INSERT INTO vendas_log (id_func, data_venda) VALUES
+                                                        ( new.id_func, current_timestamp);
+                                                    RETURN NEW;
+                                                END IF;
+                                            END;
+                                        $VENDAS_GATILHO$
+                                        LANGUAGE plpgsql; ''')
 
 
 def trigger_estoque():
